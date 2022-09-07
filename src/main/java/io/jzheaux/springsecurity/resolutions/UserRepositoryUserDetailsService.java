@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class UserRepositoryUserDetailsService implements UserDetailsService {
@@ -20,7 +20,7 @@ public class UserRepositoryUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.users.findByUsername(username)
                 .map(BridgeUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("invalid user"));
+                .orElseThrow(() -> new UsernameNotFoundException("no user"));
     }
 
     private static class BridgeUser extends User implements UserDetails {
@@ -28,10 +28,9 @@ public class UserRepositoryUserDetailsService implements UserDetailsService {
             super(user);
         }
 
-        public List<GrantedAuthority> getAuthorities() {
+        public Collection<? extends GrantedAuthority> getAuthorities() {
             return this.userAuthorities.stream()
-                    .map(UserAuthority::getAuthority)
-                    .map(SimpleGrantedAuthority::new)
+                    .map(a -> new SimpleGrantedAuthority(a.authority))
                     .collect(Collectors.toList());
         }
 

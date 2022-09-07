@@ -6,6 +6,7 @@ import java.util.UUID;
 @Entity(name = "authorities")
 public class UserAuthority {
     @Id
+    @GeneratedValue
     UUID id;
 
     @Column
