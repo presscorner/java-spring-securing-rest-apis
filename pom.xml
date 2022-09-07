@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
+		<version>2.6.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.jzheaux.springsecurity</groupId>
@@ -16,8 +16,8 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<spring-security.version>5.4.0-M1</spring-security.version>
-		<hibernate.version>5.4.13.Final</hibernate.version>
+		<spring-security.version>5.6.2</spring-security.version>
+		<hibernate.version>5.6.7.Final</hibernate.version>
 
 		<start-class>io.jzheaux.springsecurity.resolutions.ResolutionsApplication</start-class>
 	</properties>
