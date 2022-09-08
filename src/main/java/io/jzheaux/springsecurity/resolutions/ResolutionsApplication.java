@@ -1,5 +1,6 @@
 package io.jzheaux.springsecurity.resolutions;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ResolutionsApplication.class, args);
-	}
+	@Autowired
+	UserRepositoryJwtAuthenticationConverter authenticationConverter;
 
 	@Bean
 	public UserDetailsService userDetailsService(UserRepository users) {
@@ -29,6 +29,9 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests(authz -> authz
 						.anyRequest().authenticated())
 				.httpBasic(basic -> {})
+				.oauth2ResourceServer(oauth2 -> oauth2
+						.jwt().jwtAuthenticationConverter(this.authenticationConverter)
+				)
 				.cors(cors -> {});
 	}
 
@@ -40,9 +43,23 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 				registry.addMapping("/**")
 						// .maxAge(0) // if using local verification
 						.allowedOrigins("http://localhost:4000")
+						.allowCredentials(true)
 						.allowedMethods("HEAD")
 						.allowedHeaders("Authorization");
 			}
 		};
+	}
+
+/*	@Bean
+	JwtAuthenticationConverter jwtAuthenticationConverter() {
+		JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
+		JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+		authoritiesConverter.setAuthorityPrefix("");
+		authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+		return authenticationConverter;
+	}*/
+
+	public static void main(String[] args) {
+		SpringApplication.run(ResolutionsApplication.class, args);
 	}
 }
